@@ -1,17 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
-import { QrCode, Scan, Users, ChevronLeft, Heart, MapPin, Trash2, Twitter, Youtube, Instagram, Link as LinkIcon } from 'lucide-react';
-import { COLOR_UI } from '../lib/constants';
+import { Html5Qrcode } from 'html5-qrcode';
+import { QrCode, Scan, Users, ChevronLeft, Heart, MapPin, Trash2, Twitter, Youtube, Instagram, Link as LinkIcon, UserPlus, Copy, ClipboardCheck, Sparkles, AlertCircle } from 'lucide-react';
+import { COLOR_UI, COLORS } from '../lib/constants';
 
 const Exchange = ({ data }) => {
   const { profile, contactOps, contacts } = data;
-  const [mode, setMode] = useState('list'); // 'list', 'show', 'scan'
+  const [mode, setMode] = useState('list'); // 'list', 'show', 'scan', 'manual', 'magic'
   const [viewingContact, setViewingContact] = useState(null);
   const [memoInput, setMemoInput] = useState('');
+  
+  // Manual form state
+  const [manualForm, setManualForm] = useState({
+    displayName: '',
+    playerId: '',
+    favoriteCharacter: '',
+    primaryLocation: '',
+    favoriteDeckColors: []
+  });
 
-  // Encode profile data for QR. We intentionally DO NOT include the base64 avatar to keep the QR lightweight.
-  const qrData = JSON.stringify({
+  // Magic code state
+  const [magicCodeInput, setMagicCodeInput] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const qrRef = useRef(null);
+
+  // Encode profile data for QR and Magic Code.
+  const getProfileCode = () => JSON.stringify({
     type: 'LORCANA_PLAYER_CARD',
     playerId: profile.playerId,
     displayName: profile.displayName,
@@ -29,30 +44,41 @@ const Exchange = ({ data }) => {
     exchangedAt: new Date().toISOString()
   });
 
-  useEffect(() => {
-    if (mode === 'scan') {
-      const scanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        false
-      );
+  const qrData = getProfileCode();
 
-      scanner.render((decodedText) => {
-        try {
-          const parsed = JSON.parse(decodedText);
-          if (parsed.type === 'LORCANA_PLAYER_CARD') {
-            scanner.clear();
-            handleAutoAdd(parsed);
+  useEffect(() => {
+    let html5QrCode;
+    
+    if (mode === 'scan') {
+      html5QrCode = new Html5Qrcode("reader");
+      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+      
+      html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        (decodedText) => {
+          try {
+            const parsed = JSON.parse(decodedText);
+            if (parsed.type === 'LORCANA_PLAYER_CARD') {
+              html5QrCode.stop().then(() => {
+                handleAutoAdd(parsed);
+              }).catch(err => console.error("Stop failed", err));
+            }
+          } catch (e) {
+            console.error("Invalid QR code");
           }
-        } catch (e) {
-          console.error("Invalid QR code");
+        },
+        (error) => {
+          // Failure to scan usually just means no QR found in frame
         }
-      }, (error) => {
-        // console.warn(error);
+      ).catch((err) => {
+        console.error("Unable to start scanning", err);
       });
 
       return () => {
-        scanner.clear().catch(err => console.error("Failed to clear scanner", err));
+        if (html5QrCode && html5QrCode.isScanning) {
+          html5QrCode.stop().catch(err => console.error("Failed to stop scanner on unmount", err));
+        }
       };
     }
   }, [mode]);
@@ -72,11 +98,51 @@ const Exchange = ({ data }) => {
     setMode('list');
   };
 
-  const handleUpdateMemo = () => {
-    if (!viewingContact) return;
-    contactOps.update(viewingContact.id, { memo: memoInput });
-    setViewingContact({ ...viewingContact, memo: memoInput });
-    alert('メモを更新しました');
+  const handleManualAdd = (e) => {
+    e.preventDefault();
+    if (!manualForm.displayName) return;
+    
+    contactOps.add({
+      ...manualForm,
+      playerId: manualForm.playerId || `MAN-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+      exchangedAt: new Date().toISOString(),
+      memo: ''
+    });
+    alert(`${manualForm.displayName} さんを追加しました`);
+    setMode('list');
+    setManualForm({ displayName: '', playerId: '', favoriteCharacter: '', primaryLocation: '', favoriteDeckColors: [] });
+  };
+
+  const handleMagicImport = () => {
+    try {
+      const parsed = JSON.parse(magicCodeInput.trim());
+      if (parsed.type === 'LORCANA_PLAYER_CARD') {
+        handleAutoAdd(parsed);
+        setMagicCodeInput('');
+      } else {
+        alert("無効なマジックコードです。");
+      }
+    } catch (e) {
+      alert("コードの形式が正しくありません。");
+    }
+  };
+
+  const toggleManualColor = (color) => {
+    setManualForm(prev => {
+      const current = prev.favoriteDeckColors || [];
+      if (current.includes(color)) {
+        return { ...prev, favoriteDeckColors: current.filter(c => c !== color) };
+      }
+      if (current.length >= 2) return prev;
+      return { ...prev, favoriteDeckColors: [...current, color] };
+    });
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(qrData).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    });
   };
 
   if (viewingContact) {
@@ -233,6 +299,9 @@ const Exchange = ({ data }) => {
           <button className={`btn ${mode === 'scan' ? 'btn-primary' : 'card'}`} onClick={() => setMode('scan')} title="Scan QR">
             <Scan size={20} />
           </button>
+          <button className={`btn ${['manual', 'magic'].includes(mode) ? 'btn-primary' : 'card'}`} onClick={() => setMode(mode === 'manual' || mode === 'magic' ? 'list' : 'manual')} title="Manual Add">
+            <UserPlus size={20} />
+          </button>
         </div>
       </div>
 
@@ -242,6 +311,14 @@ const Exchange = ({ data }) => {
           <p style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: '1.5rem' }}>Allow other Illumineers to scan this magical seal to connect.</p>
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', display: 'inline-block', marginBottom: '1.5rem', boxShadow: '0 0 20px rgba(255,215,0,0.5)' }}>
             <QRCodeSVG value={qrData} size={200} />
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <button className="btn card" onClick={copyToClipboard} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}>
+              {copySuccess ? <ClipboardCheck size={18} color="var(--emerald)" /> : <Copy size={18} />}
+              <span>{copySuccess ? 'Copied Magic Code!' : 'Copy Magic Code'}</span>
+            </button>
+            <p style={{ fontSize: '0.7rem', opacity: 0.5, marginTop: '0.5rem' }}>Can't scan? Copy your code and send it via message.</p>
           </div>
           
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
@@ -278,8 +355,77 @@ const Exchange = ({ data }) => {
         <div className="card fade-in">
           <h3 style={{ fontFamily: 'Cinzel, serif', letterSpacing: '1px', color: 'var(--border)', marginBottom: '0.5rem' }}>Scan Seal</h3>
           <p style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: '1rem' }}>Focus your magical lens on another Illumineer's QR seal.</p>
-          <div id="reader" style={{ borderRadius: '8px', overflow: 'hidden', border: '2px solid var(--accent)', boxShadow: '0 0 15px var(--accent)' }}></div>
-          <button className="btn card" style={{ marginTop: '1.5rem', width: '100%' }} onClick={() => setMode('list')}>Cancel Spell</button>
+          <div id="reader" style={{ borderRadius: '8px', overflow: 'hidden', border: '2px solid var(--accent)', boxShadow: '0 0 15px var(--accent)', background: '#000', minHeight: '250px' }}></div>
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+            <button className="btn card" style={{ flex: 1 }} onClick={() => setMode('magic')}>Use Code</button>
+            <button className="btn card" style={{ flex: 1 }} onClick={() => setMode('list')}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {mode === 'manual' && (
+        <form onSubmit={handleManualAdd} className="card fade-in">
+          <h3 style={{ fontFamily: 'Cinzel, serif', letterSpacing: '1px', color: 'var(--border)', marginBottom: '1.5rem' }}>Manual Connection</h3>
+          <div className="form-group">
+            <label className="form-label">Display Name *</label>
+            <input className="form-input" required value={manualForm.displayName} onChange={e => setManualForm({...manualForm, displayName: e.target.value})} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Player ID (Optional)</label>
+            <input className="form-input" value={manualForm.playerId} onChange={e => setManualForm({...manualForm, playerId: e.target.value})} placeholder="P-XXXXXX" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Favorite Character</label>
+            <input className="form-input" value={manualForm.favoriteCharacter} onChange={e => setManualForm({...manualForm, favoriteCharacter: e.target.value})} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Mastered Inks</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {Object.values(COLORS).filter(c => c !== 'UNKNOWN').map(color => (
+                <button
+                  key={color} type="button" onClick={() => toggleManualColor(color)}
+                  style={{
+                    padding: '0.4rem 0.6rem', borderRadius: '6px', border: '1px solid',
+                    borderColor: manualForm.favoriteDeckColors.includes(color) ? 'var(--border)' : 'var(--border-muted)',
+                    background: manualForm.favoriteDeckColors.includes(color) ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    display: 'flex', alignItems: 'center', gap: '4px'
+                  }}
+                >
+                  <span className={`ink-dot ${COLOR_UI[color].inkClass}`} style={{ width: '10px', height: '10px' }}></span>
+                  <span style={{ fontSize: '0.7rem', fontFamily: 'Cinzel, serif' }}>{COLOR_UI[color].label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem' }}>
+            <button type="submit" className="btn btn-primary" style={{ flex: 2 }}>Add Illumineer</button>
+            <button type="button" className="btn card" style={{ flex: 1 }} onClick={() => setMode('list')}>Cancel</button>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <button type="button" style={{ fontSize: '0.8rem', color: 'var(--accent)', textDecoration: 'underline' }} onClick={() => setMode('magic')}>Have a Magic Code?</button>
+          </div>
+        </form>
+      )}
+
+      {mode === 'magic' && (
+        <div className="card fade-in">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <Sparkles size={20} color="var(--accent)" />
+            <h3 style={{ fontFamily: 'Cinzel, serif', letterSpacing: '1px', color: 'var(--border)', marginBottom: 0 }}>Magic Code Paste</h3>
+          </div>
+          <p style={{ fontSize: '0.8rem', opacity: 0.6, marginBottom: '1rem' }}>Paste the Player Card code received from another Illumineer.</p>
+          <textarea
+            className="form-textarea"
+            rows="5"
+            placeholder='{"type": "LORCANA_PLAYER_CARD", ...}'
+            value={magicCodeInput}
+            onChange={(e) => setMagicCodeInput(e.target.value)}
+            style={{ fontSize: '0.7rem', fontFamily: 'monospace' }}
+          />
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+            <button className="btn btn-primary" style={{ flex: 2 }} onClick={handleMagicImport}>Warp to Profile</button>
+            <button className="btn card" style={{ flex: 1 }} onClick={() => setMode('list')}>Cancel</button>
+          </div>
         </div>
       )}
 
@@ -321,7 +467,8 @@ const Exchange = ({ data }) => {
             <div style={{ textAlign: 'center', padding: '3rem 1rem', opacity: 0.5 }}>
               <Users size={64} style={{ marginBottom: '1rem', opacity: 0.2, filter: 'drop-shadow(0 0 10px #fff)' }} />
               <p style={{ fontFamily: 'Cinzel, serif', fontSize: '1.2rem', marginBottom: '0.5rem' }}>No connections yet</p>
-              <p style={{ fontSize: '0.8rem' }}>Use the scan feature to connect with other Illumineers.</p>
+              <p style={{ fontSize: '0.8rem' }}>Connect with others to build your Illumineer network.</p>
+              <button className="btn btn-primary" style={{ margin: '1rem auto 0' }} onClick={() => setMode('scan')}>Start Connection</button>
             </div>
           )}
         </div>
