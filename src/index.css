@@ -1,0 +1,300 @@
+:root {
+  /* Base Ink Colors */
+  --ruby: #e91e63;
+  --sapphire: #2196f3;
+  --emerald: #4caf50;
+  --amber: #ffc107;
+  --amethyst: #9c27b0;
+  --steel: #9e9e9e;
+  --unknown: #607d8b;
+
+  /* Ink Gradients (Mystical) */
+  --ruby-gradient: linear-gradient(135deg, #8B0000 0%, #FFD700 100%);
+  --sapphire-gradient: linear-gradient(135deg, #00008B 0%, #00BFFF 100%);
+  --emerald-gradient: linear-gradient(135deg, #006400 0%, #90EE90 100%);
+  --amber-gradient: linear-gradient(135deg, #B8860B 0%, #FFD700 100%);
+  --amethyst-gradient: linear-gradient(135deg, #4B0082 0%, #DA70D6 100%);
+  --steel-gradient: linear-gradient(135deg, #404040 0%, #C0C0C0 100%);
+  --unknown-gradient: linear-gradient(135deg, #2F4F4F 0%, #708090 100%);
+
+  /* Mystical Theme Base */
+  --bg: #0B0F1A;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #1A2236 0%, #0B0F1A 100%);
+  --fg: #f8fafc;
+  --card-bg: rgba(16, 24, 38, 0.85); /* Slightly transparent for background effects */
+  --border: #ffd700; /* Gold */
+  --border-muted: rgba(255, 215, 0, 0.3);
+  --accent: #DA70D6; /* Pink/Purple magic accent */
+
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: var(--fg);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Star particles / magical background effect (pseudo-element) */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 75% 65%, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 85% 15%, rgba(255, 215, 0, 0.02) 2px, transparent 2px),
+    radial-gradient(circle at 30% 80%, rgba(218, 112, 214, 0.05) 3px, transparent 3px);
+  background-size: 150px 150px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+#root {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  letter-spacing: 0.5px;
+}
+
+/* Accent for h1 to look more magical */
+h1 {
+  background: linear-gradient(135deg, #fff 0%, #DA70D6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+}
+
+/* Card Overhaul: Spellbook cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-muted);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0,0,0,0.5);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Magical glow on hover */
+.card:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: var(--border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+
+/* Card internal gradient */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 60%);
+  pointer-events: none;
+}
+
+/* Button UI */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.8) 0%, rgba(218, 112, 214, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 10px rgba(218, 112, 214, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 15px rgba(218, 112, 214, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+.btn.card {
+  margin-bottom: 0;
+  box-shadow: none;
+  border: 1px solid var(--border-muted);
+}
+.btn.card:hover {
+  box-shadow: 0 0 10px rgba(255,215,0,0.2);
+}
+
+/* Ink Dots into Badges */
+.ink-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 4px;
+  box-shadow: 0 0 4px rgba(255,255,255,0.5);
+  border: 1px solid rgba(255,255,255,0.8);
+}
+
+.ink-ruby { background: var(--ruby-gradient); }
+.ink-sapphire { background: var(--sapphire-gradient); }
+.ink-emerald { background: var(--emerald-gradient); }
+.ink-amber { background: var(--amber-gradient); }
+.ink-amethyst { background: var(--amethyst-gradient); }
+.ink-steel { background: var(--steel-gradient); }
+.ink-unknown { background: var(--unknown-gradient); }
+
+/* Spellbook Tab Navigation */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  background: rgba(11, 15, 26, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 2px solid var(--border-muted);
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0.25rem;
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem); /* PWA Safe Area */
+  z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  border-radius: 12px 12px 0 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  font-family: 'Cinzel', serif;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  min-width: 44px; /* Mobile tap target optimization */
+  min-height: 44px;
+}
+
+.nav-item:hover {
+  opacity: 0.8;
+}
+
+.nav-item.active {
+  opacity: 1;
+  color: #FFD700;
+  transform: translateY(-2px);
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.nav-item.active svg {
+  filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.5));
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #B0C4DE;
+  letter-spacing: 0.5px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-muted);
+  color: var(--fg);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--border);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Animations */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+  /* Use on individual cards or main content wrap */
+  animation: fadeInScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 5px rgba(218, 112, 214, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(218, 112, 214, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(218, 112, 214, 0.2); }
+}
+
+.glow-effect {
+  animation: pulseGlow 2s infinite;
+}
