@@ -86,7 +86,13 @@ const Exchange = ({ data }) => {
   const handleAutoAdd = (playerData) => {
     const existing = contacts.find(c => c.playerId === playerData.playerId);
     if (existing) {
-      alert(`${playerData.displayName} さんは既に登録されています`);
+      if (confirm(`${playerData.displayName} さんは既に登録されています。最新の情報に更新しますか？`)) {
+        contactOps.update(existing.id, {
+          ...playerData,
+          updatedAt: new Date().toISOString()
+        });
+        alert(`${playerData.displayName} さんの情報を更新しました`);
+      }
     } else {
       contactOps.add({
         ...playerData,
@@ -102,15 +108,18 @@ const Exchange = ({ data }) => {
     e.preventDefault();
     if (!manualForm.displayName) return;
     
-    contactOps.add({
+    handleAutoAdd({
       ...manualForm,
-      playerId: manualForm.playerId || `MAN-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
-      exchangedAt: new Date().toISOString(),
-      memo: ''
+      playerId: manualForm.playerId || `MAN-${Math.random().toString(36).substr(2, 5).toUpperCase()}`
     });
-    alert(`${manualForm.displayName} さんを追加しました`);
-    setMode('list');
     setManualForm({ displayName: '', playerId: '', favoriteCharacter: '', primaryLocation: '', favoriteDeckColors: [] });
+  };
+
+  const handleUpdateMemo = () => {
+    if (!viewingContact) return;
+    contactOps.update(viewingContact.id, { memo: memoInput });
+    setViewingContact({ ...viewingContact, memo: memoInput });
+    alert('メモを更新しました');
   };
 
   const handleMagicImport = () => {
