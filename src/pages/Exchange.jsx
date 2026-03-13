@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { QrCode, Scan, Users, ChevronLeft, Heart, MapPin, Trash2 } from 'lucide-react';
+import { QrCode, Scan, Users, ChevronLeft, Heart, MapPin, Trash2, Twitter, Youtube, Instagram, Link as LinkIcon } from 'lucide-react';
 import { COLOR_UI } from '../lib/constants';
 
 const Exchange = ({ data }) => {
@@ -21,6 +21,11 @@ const Exchange = ({ data }) => {
     favoriteDeck: profile.favoriteDeck,
     favoriteDeckColors: profile.favoriteDeckColors,
     bio: profile.bio,
+    oneLiner: profile.oneLiner,
+    snsX: profile.snsX,
+    snsYouTube: profile.snsYouTube,
+    snsInstagram: profile.snsInstagram,
+    snsCustom: profile.snsCustom,
     exchangedAt: new Date().toISOString()
   });
 
@@ -95,7 +100,7 @@ const Exchange = ({ data }) => {
           marginBottom: '1.5rem'
         }}>
           <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
               <div style={{ 
                 width: '60px', 
                 height: '60px', 
@@ -119,10 +124,33 @@ const Exchange = ({ data }) => {
                 )}
               </div>
               <h2 style={{ fontSize: '1.75rem', marginBottom: '0.25rem', color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{viewingContact.displayName}</h2>
-              <div style={{ fontSize: '0.75rem', opacity: 0.6, fontFamily: 'Cinzel, serif', letterSpacing: '2px' }}>ID: {viewingContact.playerId}</div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.6, fontFamily: 'Cinzel, serif', letterSpacing: '2px', marginBottom: '1rem' }}>ID: {viewingContact.playerId}</div>
+
+              {viewingContact.oneLiner && (
+                <div style={{ 
+                  margin: '0 auto 1rem', 
+                  fontSize: '0.85rem', 
+                  fontStyle: 'italic', 
+                  color: 'var(--amber)',
+                  background: 'rgba(0,0,0,0.2)',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '8px',
+                  display: 'inline-block',
+                  border: '1px solid rgba(255,215,0,0.1)'
+                }}>
+                  "{viewingContact.oneLiner}"
+                </div>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem' }}>
+                {viewingContact.snsX && <Twitter size={18} style={{ opacity: 0.8 }} title={viewingContact.snsX} />}
+                {viewingContact.snsYouTube && <Youtube size={18} style={{ opacity: 0.8 }} title={viewingContact.snsYouTube} />}
+                {viewingContact.snsInstagram && <Instagram size={18} style={{ opacity: 0.8 }} title={viewingContact.snsInstagram} />}
+                {viewingContact.snsCustom && <LinkIcon size={18} style={{ opacity: 0.8 }} title={viewingContact.snsCustom} />}
+              </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '1.25rem', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid var(--border-muted)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.25rem', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid var(--border-muted)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <MapPin size={18} color="var(--sapphire)" style={{ filter: 'drop-shadow(0 0 5px var(--sapphire))' }} />
                 <div>
@@ -239,7 +267,8 @@ const Exchange = ({ data }) => {
               )}
             </div>
           </div>
-          <div style={{ fontWeight: 700, fontSize: '1.5rem', fontFamily: 'Cinzel, serif', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{profile.displayName}</div>
+          <div style={{ fontWeight: 700, fontSize: '1.5rem', fontFamily: 'Cinzel, serif', textShadow: '0 2px 4px rgba(0,0,0,0.5)', marginBottom: '0.25rem' }}>{profile.displayName}</div>
+          {profile.oneLiner && <div style={{ fontSize: '0.85rem', color: 'var(--amber)', fontStyle: 'italic', marginBottom: '0.5rem' }}>"{profile.oneLiner}"</div>}
           <div style={{ opacity: 0.5, fontSize: '0.8rem', letterSpacing: '1px' }}>ID: {profile.playerId}</div>
           <button className="btn card" style={{ marginTop: '1.5rem', width: '100%' }} onClick={() => setMode('list')}>Close Spellbook</button>
         </div>

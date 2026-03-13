@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Save, User as UserIcon, Award, MapPin, Heart, Settings as SettingsIcon, Camera } from 'lucide-react';
+import { Save, User as UserIcon, Award, MapPin, Heart, Settings as SettingsIcon, Camera, Twitter, Youtube, Instagram, Link as LinkIcon, MessageSquare } from 'lucide-react';
 import { COLORS, COLOR_UI } from '../lib/constants';
 
 const Profile = ({ data, setCurrentPage }) => {
@@ -44,7 +44,6 @@ const Profile = ({ data, setCurrentPage }) => {
           }
         }
         
-        // Ensure a square crop
         const size = Math.min(width, height);
         canvas.width = size;
         canvas.height = size;
@@ -52,7 +51,6 @@ const Profile = ({ data, setCurrentPage }) => {
         const offsetX = (width - size) / 2;
         const offsetY = (height - size) / 2;
 
-        // Draw resized image on canvas, cropping it to a square
         const drawCanvas = document.createElement('canvas');
         drawCanvas.width = width;
         drawCanvas.height = height;
@@ -142,12 +140,7 @@ const Profile = ({ data, setCurrentPage }) => {
               style={{ display: 'none' }} 
               onChange={handleImageUpload} 
             />
-            <div style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>推奨: 真四角の画像 (ローカル保存専用)</div>
-            {formData.avatar && (
-              <button type="button" className="btn card" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', marginTop: '0.5rem' }} onClick={() => setFormData({ ...formData, avatar: null })}>
-                画像を削除
-              </button>
-            )}
+            <div style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>推奨: 真四角の画像</div>
           </div>
 
           <div className="form-group">
@@ -159,6 +152,59 @@ const Profile = ({ data, setCurrentPage }) => {
               onChange={e => setFormData({ ...formData, displayName: e.target.value })}
             />
           </div>
+
+          <div className="form-group">
+            <label className="form-label">一言コメント (一文程度)</label>
+            <input
+              className="form-input"
+              value={formData.oneLiner || ''}
+              onChange={e => setFormData({ ...formData, oneLiner: e.target.value })}
+              placeholder="例：最高のインク使いを目指しています！"
+            />
+          </div>
+
+          <div className="grid-2">
+            <div className="form-group">
+              <label className="form-label"><Twitter size={14} style={{ marginBottom: '-2px', marginRight: '4px' }} /> X ID</label>
+              <input
+                className="form-input"
+                value={formData.snsX || ''}
+                onChange={e => setFormData({ ...formData, snsX: e.target.value })}
+                placeholder="@username"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label"><Youtube size={14} style={{ marginBottom: '-2px', marginRight: '4px' }} /> YouTube</label>
+              <input
+                className="form-input"
+                value={formData.snsYouTube || ''}
+                onChange={e => setFormData({ ...formData, snsYouTube: e.target.value })}
+                placeholder="Channel ID / URL"
+              />
+            </div>
+          </div>
+
+          <div className="grid-2">
+            <div className="form-group">
+              <label className="form-label"><Instagram size={14} style={{ marginBottom: '-2px', marginRight: '4px' }} /> Instagram</label>
+              <input
+                className="form-input"
+                value={formData.snsInstagram || ''}
+                onChange={e => setFormData({ ...formData, snsInstagram: e.target.value })}
+                placeholder="username"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label"><LinkIcon size={14} style={{ marginBottom: '-2px', marginRight: '4px' }} /> 自由欄 (Link)</label>
+              <input
+                className="form-input"
+                value={formData.snsCustom || ''}
+                onChange={e => setFormData({ ...formData, snsCustom: e.target.value })}
+                placeholder="Other SNS / URL"
+              />
+            </div>
+          </div>
+
           <div className="form-group">
             <label className="form-label">Favorite Character</label>
             <input
@@ -219,7 +265,7 @@ const Profile = ({ data, setCurrentPage }) => {
           position: 'relative',
           overflow: 'hidden',
           padding: '2rem 1.5rem',
-          minHeight: '400px',
+          minHeight: '450px',
           display: 'flex',
           flexDirection: 'column'
         }}>
@@ -228,7 +274,7 @@ const Profile = ({ data, setCurrentPage }) => {
           </div>
           
           <div style={{ position: 'relative', zIndex: 1, flex: 1 }}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
               <div style={{ 
                 width: '80px', 
                 height: '80px', 
@@ -252,39 +298,62 @@ const Profile = ({ data, setCurrentPage }) => {
                 )}
               </div>
               <h2 style={{ fontSize: '2rem', marginBottom: '0.25rem', color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{profile.displayName}</h2>
-              <div style={{ fontSize: '0.85rem', opacity: 0.6, fontFamily: 'Cinzel, serif', letterSpacing: '2px' }}>ILLUMINEER ID: {profile.playerId}</div>
+              <div style={{ fontSize: '0.8rem', opacity: 0.6, fontFamily: 'Cinzel, serif', letterSpacing: '2px', marginBottom: '1rem' }}>ID: {profile.playerId}</div>
+              
+              {profile.oneLiner && (
+                <div style={{ 
+                  margin: '0 auto 1.5rem', 
+                  fontSize: '0.95rem', 
+                  fontStyle: 'italic', 
+                  color: 'var(--amber)',
+                  background: 'rgba(0,0,0,0.2)',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '8px',
+                  display: 'inline-block',
+                  border: '1px solid rgba(255,215,0,0.1)'
+                }}>
+                  "{profile.oneLiner}"
+                </div>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                {profile.snsX && <Twitter size={20} style={{ opacity: 0.8 }} title={profile.snsX} />}
+                {profile.snsYouTube && <Youtube size={20} style={{ opacity: 0.8 }} title={profile.snsYouTube} />}
+                {profile.snsInstagram && <Instagram size={20} style={{ opacity: 0.8 }} title={profile.snsInstagram} />}
+                {profile.snsCustom && <LinkIcon size={20} style={{ opacity: 0.8 }} title={profile.snsCustom} />}
+              </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', padding: '1.5rem', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid var(--border-muted)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.25rem', background: 'rgba(0,0,0,0.3)', borderRadius: '12px', border: '1px solid var(--border-muted)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <Heart size={20} color="var(--ruby)" style={{ filter: 'drop-shadow(0 0 5px var(--ruby))' }} />
+                <Heart size={18} color="var(--ruby)" style={{ filter: 'drop-shadow(0 0 5px var(--ruby))' }} />
                 <div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>FAVORITE GLIMMER</div>
-                  <div style={{ fontWeight: 600, fontSize: '1.1rem' }}>{profile.favoriteCharacter || 'Unknown Magic'}</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>FAVORITE GLIMMER</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{profile.favoriteCharacter || 'Unknown Magic'}</div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <MapPin size={20} color="var(--sapphire)" style={{ filter: 'drop-shadow(0 0 5px var(--sapphire))' }} />
+                <MapPin size={18} color="var(--sapphire)" style={{ filter: 'drop-shadow(0 0 5px var(--sapphire))' }} />
                 <div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>REALM / LOCATION</div>
-                  <div style={{ fontWeight: 600, fontSize: '1.1rem' }}>{profile.primaryLocation || 'Wandering'}</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>REALM / LOCATION</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{profile.primaryLocation || 'Wandering'}</div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <Award size={20} color="var(--amber)" style={{ filter: 'drop-shadow(0 0 5px var(--amber))' }} />
+                <Award size={18} color="var(--amber)" style={{ filter: 'drop-shadow(0 0 5px var(--amber))' }} />
                 <div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>LORE ACHIEVED</div>
-                  <div style={{ fontWeight: 600, fontSize: '1.1rem' }}>{profile.achievements || 'Journey just began'}</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>LORE ACHIEVED</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{profile.achievements || 'Journey just began'}</div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ display: 'flex', width: '20px', justifyContent: 'center', filter: 'drop-shadow(0 0 5px #fff)' }}>✨</div>
+                <div style={{ display: 'flex', width: '18px', justifyContent: 'center', filter: 'drop-shadow(0 0 5px #fff)' }}>✨</div>
                 <div>
-                  <div style={{ fontSize: '0.75rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>MASTERED INKS</div>
-                  <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.5, fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>MASTERED INKS</div>
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '2px' }}>
                     {(profile.favoriteDeckColors || []).length > 0 ? (
                       profile.favoriteDeckColors.map(c => <span key={c} className={`ink-dot ${COLOR_UI[c].inkClass}`} title={COLOR_UI[c].label}></span>)
                     ) : <span style={{ opacity: 0.5, fontStyle: 'italic' }}>None yet</span>}

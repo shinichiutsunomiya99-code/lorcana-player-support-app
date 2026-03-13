@@ -52,6 +52,11 @@ export function useData() {
     achievements: '',
     favoriteDeck: '',
     favoriteDeckColors: [],
+    snsX: '',
+    snsYouTube: '',
+    snsInstagram: '',
+    snsCustom: '',
+    oneLiner: '',
     bio: ''
   });
   const [contacts, contactOps] = useLocalStorage('lorcana_contacts', []);

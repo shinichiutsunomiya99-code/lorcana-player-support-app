@@ -21,10 +21,13 @@
   --bg: #0B0F1A;
   --bg-gradient: radial-gradient(circle at 50% 0%, #1A2236 0%, #0B0F1A 100%);
   --fg: #f8fafc;
-  --card-bg: rgba(16, 24, 38, 0.85); /* Slightly transparent for background effects */
-  --border: #ffd700; /* Gold */
+  --card-bg: rgba(16, 24, 38, 0.85);
+  /* Slightly transparent for background effects */
+  --border: #ffd700;
+  /* Gold */
   --border-muted: rgba(255, 215, 0, 0.3);
-  --accent: #DA70D6; /* Pink/Purple magic accent */
+  --accent: #DA70D6;
+  /* Pink/Purple magic accent */
 
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -48,8 +51,11 @@ body {
 body::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
     radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     radial-gradient(circle at 75% 65%, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     radial-gradient(circle at 85% 15%, rgba(255, 215, 0, 0.02) 2px, transparent 2px),
@@ -71,11 +77,16 @@ body::before {
   box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   font-family: 'Cinzel', serif;
   font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.5px;
 }
 
@@ -106,7 +117,7 @@ button {
   margin-bottom: 1rem;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -116,7 +127,7 @@ button {
 .card:hover {
   transform: translateY(-2px) scale(1.02);
   border-color: var(--border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.5);
   z-index: 10;
 }
 
@@ -124,7 +135,10 @@ button {
 .card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 60%);
   pointer-events: none;
 }
@@ -149,7 +163,7 @@ button {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.8) 0%, rgba(218, 112, 214, 0.8) 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   box-shadow: 0 2px 10px rgba(218, 112, 214, 0.3);
 }
 
@@ -167,8 +181,9 @@ button {
   box-shadow: none;
   border: 1px solid var(--border-muted);
 }
+
 .btn.card:hover {
-  box-shadow: 0 0 10px rgba(255,215,0,0.2);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
 }
 
 /* Ink Dots into Badges */
@@ -178,17 +193,37 @@ button {
   height: 14px;
   border-radius: 50%;
   margin-right: 4px;
-  box-shadow: 0 0 4px rgba(255,255,255,0.5);
-  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-.ink-ruby { background: var(--ruby-gradient); }
-.ink-sapphire { background: var(--sapphire-gradient); }
-.ink-emerald { background: var(--emerald-gradient); }
-.ink-amber { background: var(--amber-gradient); }
-.ink-amethyst { background: var(--amethyst-gradient); }
-.ink-steel { background: var(--steel-gradient); }
-.ink-unknown { background: var(--unknown-gradient); }
+.ink-ruby {
+  background: var(--ruby-gradient);
+}
+
+.ink-sapphire {
+  background: var(--sapphire-gradient);
+}
+
+.ink-emerald {
+  background: var(--emerald-gradient);
+}
+
+.ink-amber {
+  background: var(--amber-gradient);
+}
+
+.ink-amethyst {
+  background: var(--amethyst-gradient);
+}
+
+.ink-steel {
+  background: var(--steel-gradient);
+}
+
+.ink-unknown {
+  background: var(--unknown-gradient);
+}
 
 /* Spellbook Tab Navigation */
 .nav-bar {
@@ -205,9 +240,10 @@ button {
   display: flex;
   justify-content: space-around;
   padding: 0.5rem 0.25rem;
-  padding-bottom: env(safe-area-inset-bottom, 0.5rem); /* PWA Safe Area */
+  padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+  /* PWA Safe Area */
   z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
   border-radius: 12px 12px 0 0;
 }
 
@@ -221,7 +257,8 @@ button {
   opacity: 0.5;
   transition: all 0.3s ease;
   padding: 0.5rem;
-  min-width: 44px; /* Mobile tap target optimization */
+  min-width: 44px;
+  /* Mobile tap target optimization */
   min-height: 44px;
 }
 
@@ -254,7 +291,9 @@ button {
   letter-spacing: 0.5px;
 }
 
-.form-input, .form-select, .form-textarea {
+.form-input,
+.form-select,
+.form-textarea {
   width: 100%;
   padding: 0.875rem;
   border-radius: 8px;
@@ -266,7 +305,9 @@ button {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
   outline: none;
   border-color: var(--border);
   box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
@@ -280,8 +321,15 @@ button {
 
 /* Animations */
 @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .fade-in {
@@ -290,9 +338,17 @@ button {
 }
 
 @keyframes pulseGlow {
-  0% { box-shadow: 0 0 5px rgba(218, 112, 214, 0.2); }
-  50% { box-shadow: 0 0 20px rgba(218, 112, 214, 0.6); }
-  100% { box-shadow: 0 0 5px rgba(218, 112, 214, 0.2); }
+  0% {
+    box-shadow: 0 0 5px rgba(218, 112, 214, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(218, 112, 214, 0.6);
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(218, 112, 214, 0.2);
+  }
 }
 
 .glow-effect {
