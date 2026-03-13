@@ -354,3 +354,24 @@ button {
 .glow-effect {
   animation: pulseGlow 2s infinite;
 }
+/* Responsive adjustment for Navigation */
+@media (max-width: 500px) {
+  .nav-label {
+    display: none;
+  }
+  
+  .nav-item {
+    padding: 0.75rem 0.25rem;
+    min-width: 40px;
+    gap: 0;
+  }
+  
+  .nav-item span:first-child {
+    font-size: 1.4rem !important; /* Make emoji slightly larger when alone */
+  }
+
+  .nav-bar {
+    padding: 0.5rem 0.1rem;
+    justify-content: space-around;
+  }
+}

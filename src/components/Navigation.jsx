@@ -23,7 +23,7 @@ const Navigation = ({ currentPage, setCurrentPage }) => {
             onClick={() => setCurrentPage(item.id)}
           >
             <span style={{ fontSize: '1.2rem', marginBottom: '2px' }}>{item.emoji}</span>
-            <span>{item.label}</span>
+            <span className="nav-label">{item.label}</span>
           </button>
         );
       })}

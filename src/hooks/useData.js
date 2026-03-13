@@ -38,12 +38,26 @@ export function useLocalStorage(key, initialValue) {
   return [value, { add, update, remove, getById }];
 }
 
+export function useLocalStorageValue(key, initialValue) {
+  const [value, setValue] = useState(() => {
+    const jsonValue = localStorage.getItem(key);
+    if (jsonValue != null) return JSON.parse(jsonValue);
+    return initialValue;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
+}
+
 export function useData() {
   const [decks, deckOps] = useLocalStorage('lorcana_decks', []);
   const [events, eventOps] = useLocalStorage('lorcana_events', []);
   const [matches, matchOps] = useLocalStorage('lorcana_matches', []);
   const [notes, noteOps] = useLocalStorage('lorcana_notes', []);
-  const [profile, setProfile] = useLocalStorage('lorcana_profile', {
+  const [profile, setProfile] = useLocalStorageValue('lorcana_profile', {
     userId: uuidv4(),
     playerId: Math.random().toString(36).substr(2, 9).toUpperCase(),
     displayName: 'Player',
