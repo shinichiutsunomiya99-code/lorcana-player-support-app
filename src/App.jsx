@@ -10,6 +10,7 @@ import Stats from './pages/Stats';
 import Profile from './pages/Profile';
 import Contacts from './pages/Contacts';
 import Exchange from './pages/Exchange';
+import LoreCounter from './pages/LoreCounter';
 import Settings from './pages/Settings';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       case 'profile': return <Profile setCurrentPage={setCurrentPage} data={data} />;
       case 'contacts': return <Contacts data={data} />;
       case 'exchange': return <Exchange data={data} />;
+      case 'lore': return <LoreCounter />;
       case 'settings': return <Settings data={data} />;
       default: return <Home setCurrentPage={setCurrentPage} data={data} />;
     }

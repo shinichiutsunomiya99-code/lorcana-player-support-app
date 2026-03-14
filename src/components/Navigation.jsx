@@ -10,6 +10,7 @@ const Navigation = ({ currentPage, setCurrentPage }) => {
     { id: 'notes', emoji: '📓', label: 'Notes' },
     { id: 'stats', emoji: '📊', label: 'Lore Analysis' },
     { id: 'exchange', emoji: '🤝', label: 'Illumineer List' },
+    { id: 'lore', emoji: '💎', label: 'Lore Counter' },
     { id: 'profile', emoji: '✨', label: 'Illumineer' },
   ];
 

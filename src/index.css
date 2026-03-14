@@ -375,3 +375,200 @@ button {
     justify-content: space-around;
   }
 }
+
+/* Lore Counter Styles */
+.lore-counter-container {
+  height: calc(100vh - 80px); /* Adjust for nav bar */
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  z-index: 10;
+}
+
+.lore-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: background 0.5s ease;
+  padding: 1rem;
+  background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
+  background-color: rgba(255, 248, 220, 0.05);
+}
+
+.lore-section.opponent {
+  transform: rotate(180deg);
+  border-bottom: 2px solid var(--border-muted);
+}
+
+.lore-section.winner-bg {
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+.lore-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.player-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--border);
+  letter-spacing: 2px;
+}
+
+.turn-indicator {
+  font-size: 0.7rem;
+  color: var(--accent);
+  text-transform: uppercase;
+  font-weight: 800;
+  animation: glowText 2s infinite;
+}
+
+.lore-display {
+  text-align: center;
+}
+
+.lore-value {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1;
+  font-family: 'Cinzel', serif;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5), 0 0 20px var(--accent-gold);
+  color: #fff;
+}
+
+.lore-label {
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  opacity: 0.6;
+}
+
+.lore-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.lore-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: rgba(0,0,0,0.3);
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.lore-btn:active {
+  transform: scale(0.9);
+  background: var(--accent);
+}
+
+.lore-btn.plus { border-color: var(--sapphire); color: var(--sapphire); }
+.lore-btn.minus { border-color: var(--ruby); color: var(--ruby); }
+
+.die-display {
+  margin-top: 0.5rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lore-divider {
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5), transparent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  border-top: 1px solid var(--border-muted);
+  border-bottom: 1px solid var(--border-muted);
+  z-index: 5;
+}
+
+.lore-tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--border);
+  font-size: 0.6rem;
+  gap: 2px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.lore-tool-btn:active { color: var(--accent); }
+.lore-tool-btn.reset:active { color: var(--ruby); }
+
+.victory-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  animation: fadeIn 0.5s ease;
+}
+
+.victory-icon {
+  color: gold;
+  filter: drop-shadow(0 0 20px gold);
+  margin-bottom: 1rem;
+  animation: bounce 2s infinite;
+}
+
+.victory-text {
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 20px gold;
+  letter-spacing: 5px;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes glowText {
+  0%, 100% { text-shadow: 0 0 5px var(--accent); }
+  50% { text-shadow: 0 0 15px var(--accent), 0 0 25px var(--accent); }
+}
